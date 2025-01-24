@@ -43,13 +43,16 @@ func (api *Kraken) GetTradeBalance(baseAsset string) (TradeBalanceResponse, erro
 }
 
 // GetOpenOrders - returns account open order
-func (api *Kraken) GetOpenOrders(needTrades bool, userRef string) (OpenOrdersResponse, error) {
+func (api *Kraken) GetOpenOrders(needTrades bool, userRef, clientOrderId string) (OpenOrdersResponse, error) {
 	data := url.Values{}
 	if needTrades {
 		data.Set("trades", "true")
 	}
 	if userRef != "" {
 		data.Set("userref", userRef)
+	}
+	if clientOrderId != "" {
+		data.Set("cli_ord_id", clientOrderId)
 	}
 
 	response := OpenOrdersResponse{}
@@ -60,13 +63,16 @@ func (api *Kraken) GetOpenOrders(needTrades bool, userRef string) (OpenOrdersRes
 }
 
 // GetClosedOrders - returns account closed order
-func (api *Kraken) GetClosedOrders(needTrades bool, userRef string, start int64, end int64) (ClosedOrdersResponse, error) {
+func (api *Kraken) GetClosedOrders(needTrades bool, userRef, clientOrderId string, start int64, end int64) (ClosedOrdersResponse, error) {
 	data := url.Values{}
 	if needTrades {
 		data.Set("trades", "true")
 	}
 	if userRef != "" {
 		data.Set("userref", userRef)
+	}
+	if clientOrderId != "" {
+		data.Set("cli_ord_id", clientOrderId)
 	}
 	if start != 0 {
 		data.Set("start", strconv.FormatInt(start, 10))
@@ -148,6 +154,26 @@ func (api *Kraken) GetDepositMethods(assets ...string) ([]DepositMethods, error)
 	return response, nil
 }
 
+// GetDepositAddresses - returns deposit addresses
+func (api *Kraken) GetDepositAddresses(asset string, method string, new bool) ([]DepositAddress, error) {
+	data := url.Values{}
+	if len(asset) > 0 {
+		data.Add("asset", asset)
+	}
+	if len(method) > 0 {
+		data.Add("method", method)
+	}
+	if new {
+		data.Add("new", "true")
+	}
+
+	response := make([]DepositAddress, 0)
+	if err := api.request("DepositAddresses", true, data, &response); err != nil {
+		return response, err
+	}
+	return response, nil
+}
+
 // GetDepositStatus - returns deposit status
 func (api *Kraken) GetDepositStatus(method string, assets ...string) ([]DepositStatuses, error) {
 	data := url.Values{}
@@ -160,6 +186,55 @@ func (api *Kraken) GetDepositStatus(method string, assets ...string) ([]DepositS
 	}
 	response := make([]DepositStatuses, 0)
 	if err := api.request("DepositStatus", true, data, &response); err != nil {
+		return response, err
+	}
+	return response, nil
+}
+
+// GetWithdrawalMethods - returns withdrawal methods
+func (api *Kraken) GetWithdrawalMethods(asset, aclass, network string) ([]WithdrawalMethods, error) {
+	data := url.Values{}
+	if len(asset) > 0 {
+		data.Add("asset", asset)
+	}
+	if len(aclass) > 0 {
+		data.Add("aclass", aclass)
+	}
+	if len(network) > 0 {
+		data.Add("network", network)
+	}
+
+	response := make([]WithdrawalMethods, 0)
+	if err := api.request("WithdrawalMethods", true, data, &response); err != nil {
+		return response, err
+	}
+	return response, nil
+}
+
+// GetWithdrawalAddresses - returns withdrawal addresses
+func (api *Kraken) GetWithdrawalAddresses(asset, aclass, method, key, tag string, verified bool) ([]WithdrawalAddress, error) {
+	data := url.Values{}
+	if len(asset) > 0 {
+		data.Add("asset", asset)
+	}
+	if len(aclass) > 0 {
+		data.Add("aclass", aclass)
+	}
+	if len(method) > 0 {
+		data.Add("method", method)
+	}
+	if len(key) > 0 {
+		data.Add("key", key)
+	}
+	if len(tag) > 0 {
+		data.Add("tag", tag)
+	}
+	if verified {
+		data.Add("verified", "true")
+	}
+
+	response := make([]WithdrawalAddress, 0)
+	if err := api.request("WithdrawalAddresses", true, data, &response); err != nil {
 		return response, err
 	}
 	return response, nil

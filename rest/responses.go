@@ -598,6 +598,13 @@ type DepositMethods struct {
 	GenAddress bool   `json:"gen-address"`
 }
 
+// DepositAddress - response on GetDepositAddresses request
+type DepositAddress struct {
+	Address  string `json:"address"`
+	Expiretm string `json:"expiretm"`
+	New      bool   `json:"new"`
+}
+
 // GetDepositStatus - respons on GetDepositMethods request
 type DepositStatuses struct {
 	Method string `json:"method"`
@@ -610,6 +617,23 @@ type DepositStatuses struct {
 	Fee    string `json:"fee"`
 	Time   int    `json:"time"`
 	Status string `json:"status"`
+}
+
+// WithdrawalMethods - respons on GetWithdrawalMethods request
+type WithdrawalMethods struct {
+	Asset   string `json:"asset"`
+	Method  string `json:"method"`
+	Network string `json:"network"`
+	Minimum string `json:"minimum"`
+}
+
+// WithdrawalAddress - response on GetWithdrawalAddresses request
+type WithdrawalAddress struct {
+	Address  string `json:"address"`
+	Asset    string `json:"asset"`
+	Method   string `json:"method"`
+	Key      string `json:"key"`
+	Verified bool   `json:"verified"`
 }
 
 // WithdrawInfo - response on WithdrawInfo request

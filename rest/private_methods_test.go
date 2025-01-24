@@ -354,7 +354,7 @@ func TestKraken_GetOpenOrders(t *testing.T) {
 					Response: tt.resp,
 				},
 			}
-			got, err := api.GetOpenOrders(false, "")
+			got, err := api.GetOpenOrders(false, "", "")
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Kraken.GetOpenOrders() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -432,7 +432,7 @@ func TestKraken_GetClosedOrders(t *testing.T) {
 					Response: tt.resp,
 				},
 			}
-			got, err := api.GetClosedOrders(false, "", 0, 0)
+			got, err := api.GetClosedOrders(false, "", "", 0, 0)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Kraken.GetClosedOrders() error = %v, wantErr %v", err, tt.wantErr)
 				return
